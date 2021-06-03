@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 ############
 #world params
-a=20
-b=20
+a=10
+b=10
 #######################
 world=np.zeros((a,b))
 world[:,0]=1
@@ -14,8 +14,12 @@ world[a-1,:]=1
 #original environment 1
 #horizontals:
 
+# Adding some more hazards
 world[5,2]=2
 world[5,8]=2
+
+world[1,1]=3
+world[1,8]=3
 
 world[5,1]=1
 world[5,9]=1
@@ -66,6 +70,10 @@ episodes=1000#no. of episodes
 A=4#no. of actions
 highreward=1#reward for reaching good state
 penalty=0#-0.0001#reward for bumping into obstacle
+
+firePelnaty = -0.5
+waterPelnaty = -0.6
+
 NTreward=0
 livingpenalty=0#living reward, if any
 breakthresh=200#max number of interactions per episode

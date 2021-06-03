@@ -92,11 +92,21 @@ def Qtabular(Q,episode_no):
 				R=p.highreward
 			else:
 				R=p.livingpenalty
+		elif p.world[next_state[0],next_state[1]]==2 and (next_state[0]<=p.a and next_state[0]>=0 and next_state[1]<=p.b and next_state[1]>=0):
+			# When there is fire
+			R=p.firePelnaty
+			next_state=state.copy()
+		elif p.world[next_state[0],next_state[1]]==3 and (next_state[0]<=p.a and next_state[0]>=0 and next_state[1]<=p.b and next_state[1]>=0):
+			# When there is water
+			R=p.waterPelnaty
+			next_state=state.copy()
 		else: 
 			R=p.penalty
 			next_state=state.copy()
 
 			# define new reward for different obstacle 
+			# Counter for encoutering into hazard
+			# The avg for each hazard, should show decrease after each ep
 
 		ret=ret+R
 

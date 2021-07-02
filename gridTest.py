@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import time
 import matplotlib.animation as animation
 import matplotlib.patches as patches
+from hazard import Hazard
 
 
 #import priors_tabular as PR
@@ -35,6 +36,7 @@ def Qlearn_multirun_tab():
 
 def main_Qlearning_tab():
 	#This calls the main Q learning algorithm
+	# This Q is the 3D matrix for the Q storing (States x Actions)
 	Q=np.zeros((p.a,p.b,p.A)) # initialize Q function as zeros
 	goal_state=p.targ#target point
 	returns=[]#stores returns for each episode
@@ -87,22 +89,25 @@ def Qtabular(Q,episode_no):
 		roundedstate=staterounding(state)
 		roundednextstate=staterounding(next_state)
 
-		if p.world[next_state[0],next_state[1]]==0 and (next_state[0]<=p.a and next_state[0]>=0 and next_state[1]<=p.b and next_state[1]>=0):	
-			if np.linalg.norm(next_state-target_state)<=p.thresh:
-				R=p.highreward
+		if p.world[next_state[0], next_state[1]] == 0 and (
+				p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
+			if np.linalg.norm(next_state-target_state) <= p.thresh:
+				R = p.highreward
 			else:
-				R=p.livingpenalty
-		elif p.world[next_state[0],next_state[1]]==2 and (next_state[0]<=p.a and next_state[0]>=0 and next_state[1]<=p.b and next_state[1]>=0):
+				R = p.livingpenalty
+		elif p.world[next_state[0], next_state[1]] == 2 and (
+				p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
 			# When there is fire
-			R=p.firePelnaty
-			next_state=state.copy()
-		elif p.world[next_state[0],next_state[1]]==3 and (next_state[0]<=p.a and next_state[0]>=0 and next_state[1]<=p.b and next_state[1]>=0):
+			R = p.firePelnaty
+			next_state = state.copy()
+		elif p.world[next_state[0], next_state[1]] == 3 and (
+				p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
 			# When there is water
-			R=p.waterPelnaty
-			next_state=state.copy()
+			R = p.waterPelnaty
+			next_state = state.copy()
 		else: 
-			R=p.penalty
-			next_state=state.copy()
+			R = p.penalty
+			next_state = state.copy()
 
 			# define new reward for different obstacle 
 			# Counter for encoutering into hazard

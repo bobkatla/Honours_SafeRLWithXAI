@@ -1,5 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from hazard import Hazard
+
+
 ############
 #world params
 a=10
@@ -71,8 +74,8 @@ A=4#no. of actions
 highreward=1#reward for reaching good state
 penalty=0#-0.0001#reward for bumping into obstacle
 
-firePelnaty = -0.5
-waterPelnaty = -0.6
+firePelnaty = -0.2
+waterPelnaty = -0.1
 
 NTreward=0
 livingpenalty=0#living reward, if any
@@ -81,5 +84,6 @@ evalruns=10#no. of evaluation runs for calcret function
 evalsteps=100#no. of evaluation steps
 epsilon_decay=0.0005
 #newtarg=np.array([8,8])
-plt.imshow(np.rot90(world))
-plt.show()
+
+# plt.imshow(np.rot90(world))
+# plt.show()

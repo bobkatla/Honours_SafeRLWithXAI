@@ -1,6 +1,9 @@
 import random
 
 
+# Think of now
+# Create 2 matrix, one for the Hazard object, one for normal value
+# the hazard is for training while the normal val would be for drawing
 class Hazard:
     def __init__(self, t: int):
         if type(t) is not int or t < 0 or t > 3:
@@ -12,3 +15,6 @@ class Hazard:
         self.temp = t * a + b * 0.1 + 9
         # So water always under 10, and heat always more than 31
         # 0 is water, 1 is normal, 2 is heat
+
+    def get_temp(self):
+        return self.temp

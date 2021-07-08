@@ -59,6 +59,14 @@ world[2,2]=1
 #world[4,3]=3#end
 '''
 
+##################
+# Create another world for just only Object
+world_object = np.empty([a, b], dtype=Hazard)
+for x in range(len(world[0])):
+    for y in range(len(world[1])):
+        world_object[x, y] = Hazard(world[x, y])
+
+# print(world_object[0, 1].get_temp())
 ############################
 targ=np.array([9.,9.])#target location
 thresh=0.1#distance threshold

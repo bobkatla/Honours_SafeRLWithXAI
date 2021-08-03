@@ -17,7 +17,8 @@ def Qlearn_multirun_tab():
     retlog = []  # log of returns of all episodes, in all runs
     for i in range(p.Nruns):
         print("Run no:", i)
-        Q, ret = main_Qlearning_tab()  # call Q learning
+        Q, ret, ha_no = main_Qlearning_tab()  # call Q learning
+        print(f"the number of hazard count: {ha_no}")
         if i == 0:
             retlog = ret
         else:
@@ -51,11 +52,11 @@ def main_Qlearning_tab():
             print('75% episodes done')
         elif (i + 1) / p.episodes == 1:
             print('100% episodes done')
-        Q, ret = Qtabular(Q, i)  # call Q learning
+        Q, ret, ha_no = Qtabular(Q, i)  # call Q learning
         if i % 1 == 0:
             returns.append(
                 ret)  # compute return offline- can also be done online, but this way, a better estimate can be obtained
-    return Q, returns
+    return Q, returns, ha_no
 
 
 def Qtabular(Q, episode_no):
@@ -75,6 +76,7 @@ def Qtabular(Q, episode_no):
     # while np.linalg.norm(state-target_state)>p.thresh:
 
     # statelog.append(state)
+    hazard_count = [0, 0, 0] # ha count with fire, water, wall
     for i in range(p.breakthresh):
 
         count = count + 1
@@ -102,14 +104,17 @@ def Qtabular(Q, episode_no):
                 p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
             # When there is fire
             R = p.firePelnaty
+            hazard_count[0] += 1
             next_state = state.copy()
         elif p.world[next_state[0], next_state[1]] == 3 and (
                 p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
             # When there is water
             R = p.waterPelnaty
+            hazard_count[1] += 1
             next_state = state.copy()
         else:
             R = p.penalty
+            hazard_count[2] += 1
             next_state = state.copy()
 
         # define new reward for different obstacle
@@ -125,7 +130,7 @@ def Qtabular(Q, episode_no):
             break
         state = next_state.copy()
 
-    return Q, ret
+    return Q, ret, hazard_count
 
 
 def maxQ_tab(Q, state):

@@ -15,15 +15,16 @@ def Qlearn_multirun_tab():
     # Q-learning. Doing so helps obtain an average performance
     # measure over multiple runs.
     retlog = []  # log of returns of all episodes, in all runs
+    hazlog = []
     for i in range(p.Nruns):
         print("Run no:", i)
-        Q, ret, ha_no = main_Qlearning_tab()  # call Q learning
-        print(f"the number of hazard count: {ha_no}")
+        Q, ret, haz = main_Qlearning_tab()  # call Q learning
         if i == 0:
             retlog = ret
+            hazlog = haz
         else:
             retlog = np.vstack((retlog, ret))
-        # retlog.append(ret)
+            hazlog = np.vstack((hazlog, haz))
         if (i + 1) / p.Nruns == 0.25:
             print('25% runs complete')
         elif (i + 1) / p.Nruns == 0.5:
@@ -32,8 +33,7 @@ def Qlearn_multirun_tab():
             print('75% runs complete')
         elif (i + 1) == p.Nruns:
             print('100% runs complete')
-    # meanreturns=(np.mean(retlog,axis=0))
-    return Q, retlog
+    return Q, retlog, hazlog
 
 
 def main_Qlearning_tab():
@@ -42,6 +42,7 @@ def main_Qlearning_tab():
     Q = np.zeros((p.a, p.b, p.A))  # initialize Q function as zeros
     goal_state = p.targ  # target point
     returns = []  # stores returns for each episode
+    count_ha = []
     ret = 0
     for i in range(p.episodes):
         if (i + 1) / p.episodes == 0.25:
@@ -54,9 +55,10 @@ def main_Qlearning_tab():
             print('100% episodes done')
         Q, ret, ha_no = Qtabular(Q, i)  # call Q learning
         if i % 1 == 0:
-            returns.append(
-                ret)  # compute return offline- can also be done online, but this way, a better estimate can be obtained
-    return Q, returns, ha_no
+            # NOTE: right now just using sum of all the hazard
+            count_ha.append(sum(ha_no))
+            returns.append(ret)  # compute return offline- can also be done online, but this way, a better estimate can be obtained
+    return Q, returns, count_ha
 
 
 def Qtabular(Q, episode_no):
@@ -281,7 +283,7 @@ def mapQ(Q):
 if __name__ == "__main__":
     # w,Qimall=Qlearn_main_vid()
 
-    Q, retlog = Qlearn_multirun_tab()
+    Q, _, retlog = Qlearn_multirun_tab()
 
     mr = (np.mean(retlog, axis=0))
     csr = []

@@ -6,6 +6,9 @@ import random
 # the hazard is for training while the normal val would be for drawing
 class Hazard:
     def __init__(self, t: int):
+        self.temp = None
+        self.humid = None
+        self.wall = None
         if type(t) is not int or t < 0 or t > 3:
             Exception('Error for input')
         if t == 3:
@@ -18,3 +21,12 @@ class Hazard:
 
     def get_temp(self):
         return self.temp
+
+    def set_temp(self, t):
+        self.temp = t
+
+    def set_humid(self, h):
+        self.humid = h
+
+    def set_wall(self, w):
+        self.wall = w

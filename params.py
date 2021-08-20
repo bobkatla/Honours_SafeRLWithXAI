@@ -9,6 +9,7 @@ a=10
 b=10
 #######################
 world=np.zeros((a,b))
+# wall is blue
 world[:,0]=1
 world[0,:]=1
 world[:,b-1]=1
@@ -18,11 +19,12 @@ world[a-1,:]=1
 #horizontals:
 
 # Adding some more hazards
-world[5,2]=2
-world[5,8]=2
-
-world[1,1]=3
-world[1,8]=3
+# fire - green
+world[3,2]=2
+world[3,8]=2
+# water - yellow
+world[7,2]=3
+world[1,6]=3
 
 world[5,1]=1
 world[5,9]=1
@@ -60,13 +62,6 @@ world[2,2]=1
 '''
 
 ##################
-# Create another world for just only Object
-world_object = np.empty([a, b], dtype=Hazard)
-for x in range(len(world[0])):
-    for y in range(len(world[1])):
-        world_object[x, y] = Hazard(world[x, y] )
-
-# print(world_object[0, 1].get_temp())
 ############################
 targ=np.array([9.,9.])#target location
 thresh=0.1#distance threshold
@@ -88,7 +83,7 @@ waterPelnaty = -0.1
 NTreward=0
 livingpenalty=0 #living reward, if any
 breakthresh=200 #max number of interactions per episode
-evalruns=50#no. of evaluation runs for calcret function
+evalruns=10#no. of evaluation runs for calcret function
 evalsteps=100#no. of evaluation steps
 epsilon_decay=0.0005
 #newtarg=np.array([8,8])

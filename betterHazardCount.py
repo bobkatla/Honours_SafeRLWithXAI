@@ -6,7 +6,8 @@ import time
 import matplotlib.animation as animation
 import matplotlib.patches as patches
 from hazard import Hazard
-
+import pandas
+from model_loading import model
 
 # import priors_tabular as PR
 
@@ -43,7 +44,6 @@ def main_Qlearning_tab():
     goal_state = p.targ  # target point
     returns = []  # stores returns for each episode
     count_ha = []
-    ret = 0
     for i in range(p.episodes):
         if (i + 1) / p.episodes == 0.25:
             print('25% episodes done')
@@ -72,12 +72,8 @@ def Qtabular(Q, episode_no):
     count = 0
     breakflag = 0
     eps_live = 1 - (p.epsilon_decay * episode_no)
-    # eps_live=0.7
     ret = 0
     target_state = p.targ
-    # while np.linalg.norm(state-target_state)>p.thresh:
-
-    # statelog.append(state)
     hazard_count = [0, 0, 0] # ha count with fire, water, wall
     for i in range(p.breakthresh):
 
@@ -92,6 +88,8 @@ def Qtabular(Q, episode_no):
             Qmax, Qmin, a = maxQ_tab(Q, state)
 
         next_state = transition(state, a)
+
+        # maybe input is here for check
 
         roundedstate = staterounding(state)
         roundednextstate = staterounding(next_state)
@@ -118,10 +116,6 @@ def Qtabular(Q, episode_no):
             R = p.penalty
             hazard_count[2] += 1
             next_state = state.copy()
-
-        # define new reward for different obstacle
-        # Counter for encoutering into hazard
-        # The avg for each hazard, should show decrease after each ep
 
         ret = ret + R
 

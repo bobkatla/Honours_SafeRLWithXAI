@@ -131,7 +131,7 @@ def Qtabular(Q, episode_no):
         if np.linalg.norm(next_state - target_state) <= p.thresh:
             break
         state = next_state.copy()
-
+    print(f"Finish ep {episode_no}")
     return Q, ret, hazard_count
 
 

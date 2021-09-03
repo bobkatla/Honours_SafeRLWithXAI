@@ -80,11 +80,11 @@ penalty=0#-0.0001#reward for bumping into obstacle
 firePelnaty = -0.2
 waterPelnaty = -0.1
 
-NTreward=0
+# NTreward=0
 livingpenalty=0 #living reward, if any
 breakthresh=200 #max number of interactions per episode
 evalruns=10#no. of evaluation runs for calcret function
-evalsteps=100#no. of evaluation steps
+# evalsteps=100#no. of evaluation steps
 epsilon_decay=0.0005
 #newtarg=np.array([8,8])
 

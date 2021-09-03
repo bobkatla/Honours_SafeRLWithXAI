@@ -84,8 +84,10 @@ def Qtabular(Q, episode_no):
         check_hazard = hazard_prediction(cor_object.temp, cor_object.humid, cor_object.wall, state[0], state[1], a)
 
         roundedstate = staterounding(state)
-        next_state = state.copy()
+        next_state = transition(state, a)
+        is_hazard_next = True
 
+        # hazard prediction
         if check_hazard == 1:
             # wall
             R = p.penalty
@@ -96,13 +98,14 @@ def Qtabular(Q, episode_no):
             # water
             R = p.waterPelnaty
         else:
+            # DL predicts safe, hence, make action
             if p.world[next_state[0], next_state[1]] == 0 and (
                     p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
                 if np.linalg.norm(next_state - target_state) <= p.thresh:
                     R = p.highreward
                 else:
                     R = p.livingpenalty
-                next_state = transition(state, a)
+                is_hazard_next = False
             elif p.world[next_state[0], next_state[1]] == 2 and (
                     p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
                 # When there is fire
@@ -117,15 +120,21 @@ def Qtabular(Q, episode_no):
                 R = p.penalty
                 hazard_count[2] += 1
 
-        ret = ret + R
-
+        # update Q-function
         Qmaxnext, Qminnext, aoptnext = maxQ_tab(Q, next_state)
         Qtarget = R + (p.gamma * Qmaxnext) - Q[roundedstate[0], roundedstate[1], a]
         Q[roundedstate[0], roundedstate[1], a] = Q[roundedstate[0], roundedstate[1], a] + (p.alpha * Qtarget)
+
+        if is_hazard_next:
+            next_state = state.copy()
+        else:
+            ret = ret + R
+
         if np.linalg.norm(next_state - target_state) <= p.thresh:
             print(f"I reached the goal at ep {episode_no}")
             break
         state = next_state.copy()
+
         if i == p.breakthresh - 1:
             print(f"I have not reached the goal at ep {episode_no}")
 

@@ -15,11 +15,12 @@ def load_model():
 
 # load
 model = load_model()
+scaler = load(open('scaler.pkl', 'rb'))
 
 
 def hazard_prediction(temp, humid, wall, x, y, action):
     # load the scaler
-    scaler = load(open('scaler.pkl', 'rb'))
+    # Put the scaler outside
     prep = numpy.array([[temp, humid, wall, x, y, action]])
     prep = scaler.transform(prep)
     prediction = model.predict(prep, verbose=0)

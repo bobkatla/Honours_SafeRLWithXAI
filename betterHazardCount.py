@@ -7,10 +7,11 @@ import matplotlib.animation as animation
 import matplotlib.patches as patches
 from hazard import Hazard
 import pandas
-from model_loading import model
+from model_loading import hazard_prediction
+from object_world import world_object
+
 
 # import priors_tabular as PR
-
 def Qlearn_multirun_tab():
     # This function just runs multiple instances of
     # Q-learning. Doing so helps obtain an average performance
@@ -63,59 +64,58 @@ def main_Qlearning_tab():
 
 def Qtabular(Q, episode_no):
     initial_state = np.array([(p.a - 1) * np.random.random_sample(), (p.b - 1) * np.random.random_sample()])
-    # initial_state=np.array([2,8])
     rounded_initial_state = staterounding(initial_state)
     while p.world[rounded_initial_state[0], rounded_initial_state[1]] == 1:
         initial_state = np.array([(p.a - 1) * np.random.random_sample(), (p.b - 1) * np.random.random_sample()])
         rounded_initial_state = staterounding(initial_state)
     state = staterounding(initial_state.copy())
-    count = 0
-    breakflag = 0
     eps_live = 1 - (p.epsilon_decay * episode_no)
     ret = 0
     target_state = p.targ
     hazard_count = [0, 0, 0] # ha count with fire, water, wall
     for i in range(p.breakthresh):
-
-        count = count + 1
-        if breakflag == 1:
-            break
-        if count > p.breakthresh:
-            breakflag = 1
         if eps_live > np.random.sample():
             a = np.random.randint(p.A)
         else:
             Qmax, Qmin, a = maxQ_tab(Q, state)
 
-        next_state = transition(state, a)
-
-        # maybe input is here for check
+        # Check with DL
+        cor_object = world_object[state[0], state[1]]
+        check_hazard = hazard_prediction(cor_object.temp, cor_object.humid, cor_object.wall, state[0], state[1], a)
 
         roundedstate = staterounding(state)
-        roundednextstate = staterounding(next_state)
+        next_state = state.copy()
 
-        if p.world[next_state[0], next_state[1]] == 0 and (
-                p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
-            if np.linalg.norm(next_state - target_state) <= p.thresh:
-                R = p.highreward
-            else:
-                R = p.livingpenalty
-        elif p.world[next_state[0], next_state[1]] == 2 and (
-                p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
-            # When there is fire
-            R = p.firePelnaty
-            hazard_count[0] += 1
-            next_state = state.copy()
-        elif p.world[next_state[0], next_state[1]] == 3 and (
-                p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
-            # When there is water
-            R = p.waterPelnaty
-            hazard_count[1] += 1
-            next_state = state.copy()
-        else:
+        if check_hazard == 1:
+            # wall
             R = p.penalty
-            hazard_count[2] += 1
-            next_state = state.copy()
+        elif check_hazard == 2:
+            # fire
+            R = p.firePelnaty
+        elif check_hazard == 3:
+            # water
+            R = p.waterPelnaty
+        else:
+            if p.world[next_state[0], next_state[1]] == 0 and (
+                    p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
+                if np.linalg.norm(next_state - target_state) <= p.thresh:
+                    R = p.highreward
+                else:
+                    R = p.livingpenalty
+                next_state = transition(state, a)
+            elif p.world[next_state[0], next_state[1]] == 2 and (
+                    p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
+                # When there is fire
+                R = p.firePelnaty
+                hazard_count[0] += 1
+            elif p.world[next_state[0], next_state[1]] == 3 and (
+                    p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
+                # When there is water
+                R = p.waterPelnaty
+                hazard_count[1] += 1
+            else:
+                R = p.penalty
+                hazard_count[2] += 1
 
         ret = ret + R
 
@@ -123,8 +123,11 @@ def Qtabular(Q, episode_no):
         Qtarget = R + (p.gamma * Qmaxnext) - Q[roundedstate[0], roundedstate[1], a]
         Q[roundedstate[0], roundedstate[1], a] = Q[roundedstate[0], roundedstate[1], a] + (p.alpha * Qtarget)
         if np.linalg.norm(next_state - target_state) <= p.thresh:
+            print(f"I reached the goal at ep {episode_no}")
             break
         state = next_state.copy()
+        if i == p.breakthresh - 1:
+            print(f"I have not reached the goal at ep {episode_no}")
 
     return Q, ret, hazard_count
 

@@ -5,8 +5,8 @@ from keras.utils import np_utils
 from sklearn import datasets
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from pickle import dump
 
 # fix random seed for reproducibility
 seed = 7
@@ -19,7 +19,12 @@ X = dataset[:, 0:6].astype(float)
 Y = dataset[:, 6]
 
 # process the dataset to fit in the fitting
-X = preprocessing.scale(X)
+# X = preprocessing.scale(X)
+scaler = MinMaxScaler()
+scaler.fit(X)
+X = scaler.transform(X)
+dump(scaler, open('scaler.pkl', 'wb'))
+print("saved the scaler")
 
 # encode class values as integers
 encoder = LabelEncoder()

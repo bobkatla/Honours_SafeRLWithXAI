@@ -1,9 +1,8 @@
 import numpy
 import pandas
 from keras.models import model_from_json
-from sklearn import preprocessing
 from data_preparation import X_test, Y_test, X_train, Y_train
-from sklearn.model_selection import train_test_split
+from pickle import load
 
 
 def load_model():
@@ -17,37 +16,18 @@ def load_model():
 # load
 model = load_model()
 
+
 def hazard_prediction(temp, humid, wall, x, y, action):
+    # load the scaler
+    scaler = load(open('scaler.pkl', 'rb'))
     prep = numpy.array([[temp, humid, wall, x, y, action]])
-    # prep = preprocessing.scale(prep)
+    prep = scaler.transform(prep)
     prediction = model.predict(prep, verbose=0)
-    max_val = max(prediction)
-    final_result = numpy.where(prediction == max_val)
+    max_val = max(prediction[0])
+    final_result = numpy.where(prediction[0] == max_val)
     return final_result[0][0]
 
-# prep = numpy.array([[0,100.0,0.0,7.0,3.0,2.0]])
-# prep = preprocessing.scale(prep)
-# print(prep)
 
-# print(hazard_prediction(80,100.0,0.0,7.0,3.0,2.0))
-
-# predictions
-# Work with this custom data for test
-
-df = pandas.read_csv("./training_data.csv", header=0)
-dataset = df.values
-testu = dataset[:5, 0:6].astype(float)
-print(testu)
-
-testu = preprocessing.scale(testu)
-print(testu)
-
-# the same
-# check = model.predict(testu, verbose=0)
-# for x in check:
-#     max_val = max(x)
-#     final_result = numpy.where(x == max_val)
-#     print(final_result[0][0])
 '''
 predictions = model.predict(X_train, verbose=0)
 # This prediction is the final weights!

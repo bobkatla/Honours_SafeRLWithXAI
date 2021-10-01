@@ -42,7 +42,6 @@ def main_Qlearning_tab():
     Q = np.zeros((p.a, p.b, p.A))  # initialize Q function as zeros
     returns = []  # stores returns for each episode
     count_ha = []
-    ret = 0
     for i in range(p.episodes):
         if (i + 1) / p.episodes == 0.25:
             print('25% episodes done')
@@ -113,7 +112,6 @@ def Qtabular(Q, episode_no):
         if np.linalg.norm(next_state - target_state) <= p.thresh:
             break
         state = next_state.copy()
-    print(f"Finish ep {episode_no}")
     return Q, ret, hazard_count
 
 

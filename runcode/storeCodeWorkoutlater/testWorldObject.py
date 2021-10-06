@@ -89,6 +89,9 @@ def Qtabular(Q, episode_no):
         next_cor_object = world_object[next_state[0], next_state[1]]
         new_data = [cor_object.temp, cor_object.humid, cor_object.wall, state[0], state[1], a, next_cor_object.label]
         df.loc[len(df)] = new_data
+        if len(df) == 1000:
+            df.to_csv('testing2.csv', index=False)
+            print("break NOW")
 
         if p.world[next_state[0], next_state[1]] == 0 and (
                 p.a >= next_state[0] >= 0 and p.b >= next_state[1] >= 0):
@@ -186,6 +189,7 @@ def staterounding(state):
 if __name__ == "__main__":
     try:
         Q, retlog = Qlearn_multirun_tab()
-        df.to_csv('training_data.csv', index=False)
+        # df.to_csv('training_data.csv', index=False)
     except KeyboardInterrupt:
-        df.to_csv('training_data.csv', index=False)
+        print("break")
+        # df.to_csv('training_data.csv', index=False)

@@ -4,13 +4,13 @@ from keras.models import model_from_json
 from data_preparation import X_test, Y_test, X_train, Y_train
 from pickle import load
 
-import tensorflow as tf
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
-tf.debugging.set_log_device_placement(True)
-gpus = tf.config.list_logical_devices('GPU')
-strategy = tf.distribute.MirroredStrategy(gpus)
-with strategy.scope():
-	def load_model():
+# import tensorflow as tf
+# print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+# tf.debugging.set_log_device_placement(True)
+# gpus = tf.config.list_logical_devices('GPU')
+# strategy = tf.distribute.MirroredStrategy(gpus)
+# with strategy.scope():
+def load_model():
 		# loading model
 		model = model_from_json(open('model_architecture.json').read())
 		model.load_weights('model_weights.h5')
@@ -18,11 +18,11 @@ with strategy.scope():
 		return model
 
 
-	# load
-	model = load_model()
-	scaler = load(open('scaler.pkl', 'rb'))
+# load
+model = load_model()
+scaler = load(open('scaler.pkl', 'rb'))
 
-	def hazard_prediction(temp, humid, wall, x, y, action):
+def hazard_prediction(temp, humid, wall, x, y, action):
 		# load the scaler
 		# Put the scaler outside
 		prep = numpy.array([[temp, humid, wall, x, y, action]])

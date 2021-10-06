@@ -72,15 +72,18 @@ def Qtabular(Q, episode_no):
     while p.world[rounded_initial_state[0], rounded_initial_state[1]] == 1:
         initial_state = np.array([(p.a - 1) * np.random.random_sample(), (p.b - 1) * np.random.random_sample()])
         rounded_initial_state = staterounding(initial_state)
-    state = staterounding(initial_state.copy())
     eps_live = 1 - (p.epsilon_decay * episode_no)
     ret = 0
     target_state = p.targ
 
     hazard_count = [0, 0, 0] # ha count with fire, water, wall
+
+    state = staterounding(initial_state.copy())
     a = choose_action(Q, eps_live, state)
     for _ in range(p.breakthresh):
         next_state = transition(state, a)
+        next_action = choose_action(Q, eps_live, next_state)
+        rounded_next_state = staterounding(next_state)
         roundedstate = staterounding(state)
 
         if p.world[next_state[0], next_state[1]] == 0 and (
@@ -106,8 +109,6 @@ def Qtabular(Q, episode_no):
             hazard_count[2] += 1
             next_state = state.copy()
 
-        next_action = choose_action(Q, eps_live, next_state)
-        rounded_next_state = staterounding(next_state)
         ret = ret + R
 
         # Qmaxnext, Qminnext, aoptnext = maxQ_tab(Q, next_state)
@@ -266,10 +267,7 @@ def mapQ(Q):
 #######################################
 if __name__ == "__main__":
     # w,Qimall=Qlearn_main_vid()
-
-    Q, _, retlog = Qlearn_multirun_tab()
-
-
+    print("starting")
     Q, reward_rlog, hazard_rlog = Qlearn_multirun_tab()
 
     f1, a1 = plt.subplots()
@@ -280,7 +278,7 @@ if __name__ == "__main__":
     for i in range(len(mr)):
         if i > 0:
             csr.append(np.sum(mr[0:i]) / i)
-    # np.savez("DQN" + str(p.Nruns) + "_runs_ha.npy.npz", hazard_rlog, Q)
+    np.savez("SARSA" + str(p.Nruns) + "_runs_ha.npy.npz", hazard_rlog, Q)
     s_retlog = np.shape(hazard_rlog)
     x = range(s_retlog[1])
     mn = np.mean(hazard_rlog, axis=0)
@@ -299,7 +297,7 @@ if __name__ == "__main__":
     for i in range(len(mr)):
         if i > 0:
             csr.append(np.sum(mr[0:i]) / i)
-    # np.savez("DQN" + str(p.Nruns) + "_runs_re.npy.npz", reward_rlog, Q)
+    np.savez("SARSA" + str(p.Nruns) + "_runs_re.npy.npz", reward_rlog, Q)
     s_retlog = np.shape(reward_rlog)
     x = range(s_retlog[1])
     mn = np.mean(reward_rlog, axis=0)

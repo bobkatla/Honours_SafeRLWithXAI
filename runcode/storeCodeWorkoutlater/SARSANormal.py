@@ -111,6 +111,9 @@ def Qtabular(Q, episode_no):
 
         ret = ret + R
 
+        # next_action = choose_action(Q, eps_live, next_state)
+        # rounded_next_state = staterounding(next_state)
+
         # Qmaxnext, Qminnext, aoptnext = maxQ_tab(Q, next_state)
         Qtarget = R + (p.gamma * Q[rounded_next_state[0], rounded_next_state[1], next_action]) - Q[roundedstate[0], roundedstate[1], a]
         Q[roundedstate[0], roundedstate[1], a] = Q[roundedstate[0], roundedstate[1], a] + (p.alpha * Qtarget)

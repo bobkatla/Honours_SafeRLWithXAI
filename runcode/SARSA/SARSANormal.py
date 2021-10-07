@@ -58,6 +58,13 @@ def main_Qlearning_tab():
             returns.append(ret)  # compute return offline- can also be done online, but this way, a better estimate can be obtained
     return Q, returns, count_ha
 
+def choose_action(Q, epsilon, state):
+    a = None
+    if epsilon > np.random.sample():
+        a = np.random.randint(p.A)
+    else:
+        Qmax, Qmin, a = maxQ_tab(Q, state)
+    return a
 
 def Qtabular(Q, episode_no):
     initial_state = np.array([(p.a - 1) * np.random.random_sample(), (p.b - 1) * np.random.random_sample()])
@@ -65,20 +72,18 @@ def Qtabular(Q, episode_no):
     while p.world[rounded_initial_state[0], rounded_initial_state[1]] == 1:
         initial_state = np.array([(p.a - 1) * np.random.random_sample(), (p.b - 1) * np.random.random_sample()])
         rounded_initial_state = staterounding(initial_state)
-    state = staterounding(initial_state.copy())
     eps_live = 1 - (p.epsilon_decay * episode_no)
     ret = 0
     target_state = p.targ
 
     hazard_count = [0, 0, 0] # ha count with fire, water, wall
+
+    state = staterounding(initial_state.copy())
+    a = choose_action(Q, eps_live, state)
     for _ in range(p.breakthresh):
-        if eps_live > np.random.sample():
-            a = np.random.randint(p.A)
-        else:
-            Qmax, Qmin, a = maxQ_tab(Q, state)
-
         next_state = transition(state, a)
-
+        next_action = choose_action(Q, eps_live, next_state)
+        rounded_next_state = staterounding(next_state)
         roundedstate = staterounding(state)
 
         if p.world[next_state[0], next_state[1]] == 0 and (
@@ -106,9 +111,10 @@ def Qtabular(Q, episode_no):
 
         ret = ret + R
 
-        Qmaxnext, Qminnext, aoptnext = maxQ_tab(Q, next_state)
-        Qtarget = R + (p.gamma * Qmaxnext) - Q[roundedstate[0], roundedstate[1], a]
+        # Qmaxnext, Qminnext, aoptnext = maxQ_tab(Q, next_state)
+        Qtarget = R + (p.gamma * Q[rounded_next_state[0], rounded_next_state[1], next_action]) - Q[roundedstate[0], roundedstate[1], a]
         Q[roundedstate[0], roundedstate[1], a] = Q[roundedstate[0], roundedstate[1], a] + (p.alpha * Qtarget)
+
         if np.linalg.norm(next_state - target_state) <= p.thresh:
             break
         state = next_state.copy()
@@ -261,10 +267,7 @@ def mapQ(Q):
 #######################################
 if __name__ == "__main__":
     # w,Qimall=Qlearn_main_vid()
-
-    Q, _, retlog = Qlearn_multirun_tab()
-
-
+    print("starting")
     Q, reward_rlog, hazard_rlog = Qlearn_multirun_tab()
 
     f1, a1 = plt.subplots()
@@ -275,7 +278,7 @@ if __name__ == "__main__":
     for i in range(len(mr)):
         if i > 0:
             csr.append(np.sum(mr[0:i]) / i)
-    # np.savez("DQN" + str(p.Nruns) + "_runs_ha.npy.npz", hazard_rlog, Q)
+    np.savez("SARSA" + str(p.Nruns) + "_runs_ha.npy.npz", hazard_rlog, Q)
     s_retlog = np.shape(hazard_rlog)
     x = range(s_retlog[1])
     mn = np.mean(hazard_rlog, axis=0)
@@ -294,7 +297,7 @@ if __name__ == "__main__":
     for i in range(len(mr)):
         if i > 0:
             csr.append(np.sum(mr[0:i]) / i)
-    # np.savez("DQN" + str(p.Nruns) + "_runs_re.npy.npz", reward_rlog, Q)
+    np.savez("DQN" + str(p.Nruns) + "_runs_re.npy.npz", reward_rlog, Q)
     s_retlog = np.shape(reward_rlog)
     x = range(s_retlog[1])
     mn = np.mean(reward_rlog, axis=0)

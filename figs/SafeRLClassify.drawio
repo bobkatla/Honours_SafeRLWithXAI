@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-10-08T00:22:23.732Z" agent="5.0 (Windows)" etag="QAektJk7xfG933ZoTw30" version="15.4.3" type="github">
+<mxfile host="app.diagrams.net" modified="2021-10-08T00:24:12.154Z" agent="5.0 (Windows)" etag="sshHgOhsgfZRUyvM3msi" version="15.4.3" type="github">
   <diagram id="zvG8gOoKLg7x9lctHi23" name="Page-1">
     <mxGraphModel dx="1447" dy="797" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -11,7 +11,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="zF8SeKDar9_ll212jqUI-1" value="Safe Reinforcement Learning" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;" parent="1" vertex="1">
-          <mxGeometry x="500" y="90" width="120" height="60" as="geometry" />
+          <mxGeometry x="540" y="90" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="zF8SeKDar9_ll212jqUI-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=16;" parent="1" source="zF8SeKDar9_ll212jqUI-2" target="zF8SeKDar9_ll212jqUI-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -32,7 +32,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="zF8SeKDar9_ll212jqUI-3" value="Exploration Process" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;" parent="1" vertex="1">
-          <mxGeometry x="770" y="210" width="120" height="60" as="geometry" />
+          <mxGeometry x="860" y="210" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="zF8SeKDar9_ll212jqUI-4" value="Worst case criterion" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="20" y="360" width="120" height="60" as="geometry" />
@@ -61,7 +61,7 @@
           <mxGeometry x="680" y="360" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="zF8SeKDar9_ll212jqUI-8" value="Risk-directed Exploration" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;" parent="1" vertex="1">
-          <mxGeometry x="850" y="360" width="120" height="60" as="geometry" />
+          <mxGeometry x="1020" y="360" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="zF8SeKDar9_ll212jqUI-9" value="Getting a policy from demonstrations" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="680" y="470" width="120" height="60" as="geometry" />

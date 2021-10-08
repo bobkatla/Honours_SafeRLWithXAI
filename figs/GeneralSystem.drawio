@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-10-08T00:57:56.495Z" agent="5.0 (Windows)" etag="kHhE48J16satxtBaqbbV" version="15.4.3" type="github">
+<mxfile host="app.diagrams.net" modified="2021-10-08T00:58:02.816Z" agent="5.0 (Windows)" etag="gOyJJNHYbQK8vJSqkVFK" version="15.4.3" type="github">
   <diagram id="hfisGCpkYvtmeZW-5p2r" name="Page-1">
     <mxGraphModel dx="868" dy="478" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -46,7 +46,7 @@
         </mxCell>
         <mxCell id="23xbA3XrxommICAyEXQ8-21" value="rewards" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=20;" parent="23xbA3XrxommICAyEXQ8-14" vertex="1" connectable="0">
           <mxGeometry x="0.3017" relative="1" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint x="16" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="23xbA3XrxommICAyEXQ8-7" value="Environment" style="rounded=0;whiteSpace=wrap;html=1;fontSize=20;" parent="1" vertex="1">

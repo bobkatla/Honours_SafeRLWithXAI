@@ -89,8 +89,8 @@ def Qtabular(Q, episode_no):
         next_cor_object = world_object[next_state[0], next_state[1]]
         new_data = [cor_object.temp, cor_object.humid, cor_object.wall, state[0], state[1], a, next_cor_object.label]
         df.loc[len(df)] = new_data
-        if len(df) == 21000:
-            df.to_csv('full.csv', index=False)
+        if len(df) == 4:
+            df.to_csv('testing.csv', index=False)
             print("break NOW")
 
         if p.world[next_state[0], next_state[1]] == 0 and (

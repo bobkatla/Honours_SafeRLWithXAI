@@ -13,7 +13,7 @@ seed = 7
 numpy.random.seed(seed)
 
 # load dataset
-dataframe = pandas.read_csv("testSmall.csv", header=0)
+dataframe = pandas.read_csv("testing.csv", header=0)
 dataset = dataframe.values
 X = dataset[:, 0:6].astype(float)
 Y = dataset[:, 6]

@@ -1,7 +1,7 @@
 import numpy
 import pandas
 from keras.models import model_from_json
-from data_preparation import X_test, Y_test, X_train, Y_train
+# from data_preparation import X_test, Y_test, X_train, Y_train
 from pickle import load
 
 # import tensorflow as tf

@@ -94,5 +94,5 @@ breakthresh=200 #max number of interactions per episode
 epsilon_decay=0.0005
 #newtarg=np.array([8,8])
 
-# plt.imshow(np.rot90(world))
-# plt.show()
+plt.imshow(np.rot90(world))
+plt.show()

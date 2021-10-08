@@ -60,7 +60,7 @@ def set_plot_inside(a, X, min, max, mean, color, label):
     a.plot(X, min, color=color, label=label)
 
 
-def set_graph(X, data, ylable, pathFull, pathOri, save_name):
+def set_graph(X, data, ylable, pathFull, pathOri, save_name, extra_SARSA):
     f, a = plt.subplots()
 
     a.set_xlabel('Episodes', fontsize=20)
@@ -69,19 +69,30 @@ def set_graph(X, data, ylable, pathFull, pathOri, save_name):
     # solving the special cases of 21,000 and original
     data_full = np.load(pathFull)
     data_ori = np.load(pathOri)
+    data_S = np.load(extra_SARSA)
     arr_full = []
     arr_ori = []
+    arr_S = []
     for i in range(actual_n):
         arr_outside_full = []
         arr_outside_ori = []
+        arr_outside_S = []
+
         for j in range(smooth_factor):
             actual_index = i * smooth_factor + j
+
             avg_full = get_avg_each_ep(data_full, actual_index)
             arr_outside_full.append(avg_full)
+
             avg_ori = get_avg_each_ep(data_ori, actual_index)
             arr_outside_ori.append(avg_ori)
+
+            avg_S = get_avg_each_ep(data_S, actual_index)
+            arr_outside_S.append(avg_S)
+
         arr_full.append(np.mean(arr_outside_full))
         arr_ori.append(np.mean(arr_outside_ori))
+        arr_S.append(np.mean(arr_outside_S))
 
     # solving other cases
     for i in range(n_gr):
@@ -90,18 +101,19 @@ def set_graph(X, data, ylable, pathFull, pathOri, save_name):
 
     a.plot(X, arr_full, color='red', label='21,000')
     a.plot(X, arr_ori, color='black', label='original')
+    a.plot(X, arr_S, color='grey', label='SARSA - 0.2')
 
     a.legend()
 
-    f.savefig(f'{save_name}.png')
+    f.savefig(f'{save_name}.pdf')
 
 #######################################
 if __name__ == "__main__":
     X = range(0, EP, smooth_factor)
 
-    set_graph(X, ha_count_Q, 'Hazard', './full/Q_ha.npy', './Q_ha.npy', 'ha_count_Q_combine')
-    set_graph(X, ha_count_SARSA, 'Hazard', './full/SARSA_ha.npy', './SARSA_ha.npy', 'ha_count_SARSA_combine')
-    set_graph(X, re_Q, 'Reward', './full/Q_re.npy', './Q_re.npy', 'reward_Q_combine')
-    set_graph(X, re_SARSA, 'Reward', './full/SARSA_re.npy', './SARSA_re.npy', 'reward_SARSA_combine')
+    set_graph(X, ha_count_Q, 'Hazard', './full/Q_ha.npy', './Q_ha.npy', 'ha_count_Q_combine', './extraSARSA/SARSA_ha.npy')
+    set_graph(X, ha_count_SARSA, 'Hazard', './full/SARSA_ha.npy', './SARSA_ha.npy', 'ha_count_SARSA_combine', './extraSARSA/SARSA_ha.npy')
+    set_graph(X, re_Q, 'Reward', './full/Q_re.npy', './Q_re.npy', 'reward_Q_combine', './extraSARSA/SARSA_re.npy')
+    set_graph(X, re_SARSA, 'Reward', './full/SARSA_re.npy', './SARSA_re.npy', 'reward_SARSA_combine', './extraSARSA/SARSA_re.npy')
 
     plt.show()
